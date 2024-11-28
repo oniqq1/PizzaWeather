@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <h2>{{data['temp']}} - degrees Celsius </h2>
+
+    <br>
+
+    <h2>recomended pizza for you...</h2>
+    <h2>{{data['pizza'][1]}} : {{data['pizza'][2]}}</h2>
+
+    <br>
+    <br>
+    <br>
+
+    <div style="text-align: center;">
+        <img src="{{ photo }}" style="width: 300px;">
+    </div>
+
+</body>
+</html>
