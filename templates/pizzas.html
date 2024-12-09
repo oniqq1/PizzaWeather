@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pizzas</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<h1>Pizzas </h1>
+{% for pizza in pizzas %}
+    <h2> Name - {{ pizza[1] }}</h2>
+    <h2> Description - {{pizza[2]}}</h2>
+    <form action="{{url_for('delete_pizza', id=pizza[0]) }}" method="post">
+  <input type="submit" value="Delete Post"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure?')">
+</form>
+<a href="{{url_for('get_pizza_id', id=pizza[0]) }}">link</a>
+<br>
+<br>
+{% endfor %}
+</body>
+</html>

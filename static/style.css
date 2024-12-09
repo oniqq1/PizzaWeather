@@ -1,29 +1,31 @@
-* {
-    margin: 0;
-    padding: 0;
+.flashes {
+   background-image: linear-gradient(#ff008c,#ff4747);
+   width: 300px;
+   padding: 1%;
+   text-align: center;
+   font-family: sans-serif;
+   animation: move_anim 300ms steps(100, end);
 }
 
-body {
-    font-size: 20px;
-    background-image: linear-gradient(270deg, #2376ae 0%, #c16ecf 100%);
-    padding: 50px;
-    font-family: sans-serif;
+.flashes::before {
+   content: "Ouch! ";
+   font-weight: bold;
+
 }
 
-h1 {
-    color: white;
-    text-align: center;
+.flashes::after {
+   content: " 🤒";
 }
 
-h2 {
-    color: white;
-    text-align: center;
+.flashes:hover{
+   background-image: linear-gradient(#fb004f,#fd4d4d);
 }
 
-h1::before {
-    content: "Welcome to FlaskBlog";
-}
-  
-h1:hover::before {
-    content: "Good luck with your studies";
-}
+@keyframes move_anim {
+   from {
+     width: 0ch;
+   }
+   to {
+     width: 300px;
+   }
+ }

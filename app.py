@@ -1,5 +1,5 @@
 import requests
-from flask import Flask, render_template
+from flask import Flask, render_template ,redirect , url_for ,request ,flash
 import sqlite3
 
 app = Flask(__name__)
@@ -37,8 +37,8 @@ def create_connect_bd():
 
 
 @app.get('/')
-def index():
-    return render_template("index.html")
+def main():
+    return render_template("main.html")
 
 
 def get_weather() -> int:
@@ -50,7 +50,7 @@ def get_weather() -> int:
     return (int(info_temp) - 273)
 
 
-def get_pizza() -> dict:
+def get_pizza():
     data_pizza = {}
 
     sql_conection = sqlite3.connect('pizza.db')
@@ -69,6 +69,80 @@ def get_pizza() -> dict:
     print(data_pizza.get("pizzas"))
     return data_pizza
 
+
+@app.get("/pizzas/")
+def get_pizzas():
+    pizzas = get_pizza().get("pizzas")
+    return render_template("pizzas.html",pizzas=pizzas)
+
+
+@app.get("/add/")
+def add_pizza():
+    return render_template("add.html")
+
+@app.post('/add/')
+def add_post_pizza():
+    print('add')
+
+    name = request.form["name"]
+    description = request.form["description"]
+    connection = sqlite3.connect('pizza.db')
+
+    if not name or not description:
+        flash("Title or Content are not exist")
+        return render_template("add.html")
+
+    connection.execute("INSERT INTO pizzas"
+                       "(name,description)"
+                       "VALUES"
+                       "(?,?)", (name, description,))
+    connection.commit()
+    connection.close()
+    return redirect(url_for("main"))
+@app.get("/<int:id>/edit")
+def get_edit(id):
+    pizza = get_pizza_po_id(id)
+    return render_template("edit.html",pizza=pizza)
+@app.post('/<int:id>/edit/')
+def edit_pizza(id):
+    print('fafsfs')
+    pizza = get_pizza_po_id(id)
+    name = request.form["name"]
+    description = request.form["description"]
+    connection = sqlite3.connect('pizza.db')
+
+    if not name or not description:
+        flash("Title or Content are not exist")
+        return render_template("edit.html",pizza=pizza)
+
+    connection.execute("UPDATE pizzas SET name = ? , description = ? WHERE id = ?", (name, description,id,))
+    connection.commit()
+    connection.close()
+    return redirect(url_for("main"))
+
+
+
+
+@app.get("/pizzas/<int:id>/")
+def get_pizza_id(id):
+    pizza = get_pizza_po_id(id)
+    return render_template("pizza.html",pizza=pizza)
+
+def get_pizza_po_id(id):
+    conection = sqlite3.connect('pizza.db')
+    pizza = conection.execute("SELECT * FROM pizzas WHERE id=?", (id,)).fetchone()
+    conection.close()
+
+    return pizza
+
+
+@app.post("/<int:id>/delete/")
+def delete_pizza(id):
+    conection = sqlite3.connect('pizza.db')
+    conection.execute("DELETE FROM pizzas WHERE id=?", (id,))
+    conection.commit()
+    conection.close()
+    return redirect(url_for("main"))
 
 @app.get('/weather')
 def weather_pizza():
