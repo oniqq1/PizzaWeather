@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1>{{pizza[1]}} - {{pizza[2]}} - {{pizza[0]}}</h1>
+    <form action="{{url_for('delete_pizza', id=pizza[0]) }}" method="post">
+  <input type="submit" value="Delete Post"
+                    class="btn btn-danger btn-sm"
+                    onclick="return confirm('Are you sure?')">
+</form>
+<a href="{{url_for('get_edit', id=pizza[0]) }}">edit</a>
+</body>
+</html>
