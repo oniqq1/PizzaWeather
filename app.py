@@ -1,13 +1,38 @@
 import requests
 from flask import Flask, render_template ,redirect , url_for ,request ,flash
 import sqlite3
+from poll import poll_data
+f_n = 'dataData.txt'
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "oinqq_solo_ruster52_2009"
 
+@app.get("/test")
+def test():
+    return render_template("poll.html", data=poll_data)
 
 
+@app.get('/poll')
+def poll():
+    answer = request.args.get("field")
+    with open(f_n,"a") as file:
+        file.write(answer + "\n")
 
+    return answer
+@app.get('/results')
+def results():
+    new_votes = {}
+    with open(f_n,"r") as file:
+        votes = file.read().split()
+
+    for vote in votes:
+        new_votes[vote] = votes.count(vote)
+
+
+    keys = list(new_votes.keys())
+
+
+    return render_template("results.html",data=new_votes , keys=keys)
 def create_connect_bd():
 
     sql_conection = sqlite3.connect('pizza.db')
