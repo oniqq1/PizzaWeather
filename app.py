@@ -2,10 +2,44 @@ import requests
 from flask import Flask, render_template ,redirect , url_for ,request ,flash
 import sqlite3
 from poll import poll_data
+
+
+from flask_wtf import FlaskForm
+from wtforms import StringField , BooleanField , SubmitField
+
+
+
 f_n = 'dataData.txt'
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "oinqq_solo_ruster52_2009"
+
+
+class Vote(FlaskForm):
+    vote = BooleanField("Good_or_Bad")
+    text = StringField("Text")
+    submit = SubmitField("Submit")
+
+@app.get('/votes/')
+def votes():
+    ans = [['cool',True],['bad',False],['ok',True]]
+
+    return render_template("VOTES.html",vote=ans)
+
+@app.get('/vote/')
+def vote():
+    form = Vote()
+
+    return render_template("VOTE.html",form=form)
+@app.post('/vote/')
+def post():
+    vote = request.form.get("vote")
+    if vote == None:
+        vote = False
+    else:
+        vote= True
+    return (f"text = {request.form.get("text")} "
+            f"vote = {vote}")
 
 @app.get("/test")
 def test():
